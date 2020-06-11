@@ -1,10 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:rxdart/rxdart.dart';
+import 'package:tic_tac/services/online.dart';
 import 'package:tic_tac/services/provider.dart';
 import 'package:tic_tac/services/sound.dart';
 
 final soundService = locator<SoundService>();
+final onlineService = locator<OnlineService>();
 
 enum BoardState { Done, Play, Wait }
 enum GameMode { Solo, Multi, Online }
@@ -34,6 +36,35 @@ class BoardService {
 
   BoardService() {
     _initStreams();
+
+    onlineService.otherPlayerMove.listen((opponentMove) {
+      print("TEST");
+
+      int i = opponentMove.key;
+      int j = opponentMove.value;
+
+      if (i == -1 || j == -1) {
+        return;
+      }
+
+      String player = _player$.value;
+      List<List<String>> currentBoard = _board$.value;
+
+      currentBoard[i][j] = player;
+      _board$.add(currentBoard);
+      switchPlayer(player);
+
+      bool isWinner = _checkWinner(i, j);
+      boardState$.add(MapEntry(BoardState.Play, player));
+
+      if (isWinner) {
+        _updateScore(player);
+        _boardState$.add(MapEntry(BoardState.Done, player));
+        return;
+      } else if (isBoardFull()) {
+        _boardState$.add(MapEntry(BoardState.Done, null));
+      }
+    });
   }
 
   void newMove(int i, int j) {
@@ -55,6 +86,9 @@ class BoardService {
       _boardState$.add(MapEntry(BoardState.Done, null));
     } else if (_gameMode$.value == GameMode.Solo) {
       botMove();
+    } else if (_gameMode$.value == GameMode.Online) {
+      _boardState$.add(MapEntry(BoardState.Wait, player));
+      onlineService.move(i, j);
     }
   }
 

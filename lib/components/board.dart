@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tic_tac/components/x.dart';
 import 'package:tic_tac/services/alert.dart';
 import 'package:tic_tac/services/board.dart';
 import 'package:tic_tac/services/provider.dart';
 import 'package:tic_tac/theme/theme.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'o.dart';
 
@@ -88,27 +88,29 @@ class _BoardState extends State<Board> {
                   .asMap()
                   .map(
                     (i, row) => MapEntry(
-                          i,
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: row
-                                .asMap()
-                                .map(
-                                  (j, item) => MapEntry(
-                                        j,
-                                        GestureDetector(
-                                          onTap: () {
-                                            if (board[i][j] != ' ') return;
-                                            boardService.newMove(i, j);
-                                          },
-                                          child: _buildBox(i, j, item),
-                                        ),
-                                      ),
-                                )
-                                .values
-                                .toList(),
-                          ),
-                        ),
+                      i,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: row
+                            .asMap()
+                            .map(
+                              (j, item) => MapEntry(
+                                j,
+                                GestureDetector(
+                                  onTap: state.key != BoardState.Wait
+                                      ? () {
+                                          if (board[i][j] != ' ') return;
+                                          boardService.newMove(i, j);
+                                        }
+                                      : () {},
+                                  child: _buildBox(i, j, item),
+                                ),
+                              ),
+                            )
+                            .values
+                            .toList(),
+                      ),
+                    ),
                   )
                   .values
                   .toList(),
@@ -120,8 +122,8 @@ class _BoardState extends State<Board> {
   Widget _buildBox(int i, int j, item) {
     BoxBorder border = Border();
     BorderSide borderStyle = BorderSide(width: 1, color: Colors.black26);
-    double height=80;
-    double width=60;
+    double height = 80;
+    double width = 60;
     if (j == 1) {
       border = Border(right: borderStyle, left: borderStyle);
       height = width = 80;
