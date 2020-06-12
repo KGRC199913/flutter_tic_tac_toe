@@ -8,7 +8,7 @@ import 'package:tic_tac/services/sound.dart';
 final soundService = locator<SoundService>();
 final onlineService = locator<OnlineService>();
 
-enum BoardState { Done, Play, Wait }
+enum BoardState { Done, Play, Wait, Init }
 enum GameMode { Solo, Multi, Online }
 
 class BoardService {
@@ -38,8 +38,6 @@ class BoardService {
     _initStreams();
 
     onlineService.otherPlayerMove.listen((opponentMove) {
-      print("TEST");
-
       int i = opponentMove.key;
       int j = opponentMove.value;
 
@@ -64,6 +62,21 @@ class BoardService {
       } else if (isBoardFull()) {
         _boardState$.add(MapEntry(BoardState.Done, null));
       }
+    });
+
+    onlineService.networkStatus.listen((status) {
+      if (status == "?") {
+        return;
+      }
+
+      if (status == null) {
+        player$.add(null);
+        boardState$.add(MapEntry(BoardState.Init, status));
+        return;
+      }
+
+      player$.add(status);
+      boardState$.add(MapEntry(BoardState.Play, status));
     });
   }
 
@@ -200,6 +213,15 @@ class BoardService {
   void newGame() {
     resetBoard();
     _score$.add(MapEntry(0, 0));
+  }
+
+  void initNetwork() {
+    boardState$.add(MapEntry(BoardState.Init, ""));
+    onlineService.init();
+  }
+
+  void disconnectOnlineGame() {
+    onlineService.disconnect();
   }
 
   void _initStreams() {

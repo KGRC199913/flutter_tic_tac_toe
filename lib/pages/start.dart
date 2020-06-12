@@ -122,6 +122,7 @@ class StartPage extends StatelessWidget {
                         onTap: () {
                           boardService.gameMode$.add(GameMode.Online);
                           soundService.playSound('click');
+                          boardService.initNetwork();
 
                           Navigator.push(
                             context,
