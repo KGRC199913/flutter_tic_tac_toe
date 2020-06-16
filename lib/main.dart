@@ -3,6 +3,7 @@ import 'package:tic_tac/pages/start.dart';
 import 'package:tic_tac/services/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   runApp(MyApp());
 }
