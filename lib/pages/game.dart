@@ -45,16 +45,19 @@ class GamePageState extends State<GamePage> {
                   final int oScore = snapshot.data.key.value;
 
                   if (snapshot.data.value.key == BoardState.Init) {
-                    return Center(
-                      child: Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("waiting for a match".toUpperCase()),
-                            CircularProgressIndicator()
-                          ],
-                        ),
-                      ),
+                    return Flex(
+                      direction: Axis.horizontal,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text("waiting for a match".toUpperCase()),
+                              CircularProgressIndicator()
+                            ],
+                          ),
+                        )
+                      ],
                     );
                   } else {
                     return Container(

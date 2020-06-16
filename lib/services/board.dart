@@ -76,7 +76,13 @@ class BoardService {
       }
 
       player$.add(status);
-      boardState$.add(MapEntry(BoardState.Play, status));
+      var isFirst = onlineService.isFirst.value;
+
+      if (isFirst) {
+        boardState$.add(MapEntry(BoardState.Play, status));
+      } else {
+        boardState$.add(MapEntry(BoardState.Wait, status));
+      }
     });
   }
 
