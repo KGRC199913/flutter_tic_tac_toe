@@ -21,6 +21,7 @@ class OnlineService {
   String _currentUid;
   String _currentCompetitorUid;
   String _currentMatchId;
+  String _playerSign;
 
   OnlineService() {
     _initStream();
@@ -40,15 +41,12 @@ class OnlineService {
     });
 
     io.on('connect', (_) {
-      print('connected');
       io.emit('JOIN_OWN_ROOM', {"connect": true});
     });
 
     io.on('SEND_ID', (data) {
       _currentUid = data["userId"];
 
-      print("UID ---");
-      print(_currentUid);
       io.emit('FIND_MATCH', {"userId": _currentUid});
     });
 
@@ -58,8 +56,8 @@ class OnlineService {
       bool isFirst = data['yourTurn'];
       String assignedSign = data['sign'];
 
-      print("MATCH ID ---");
-      print(_currentMatchId);
+      _playerSign = assignedSign;
+
       _isFirst.add(isFirst);
       _networkStatus.add(assignedSign);
     });
@@ -68,8 +66,11 @@ class OnlineService {
       int xPos = data['x'];
       int yPos = data['y'];
 
-      print("$_currentUid $xPos $yPos");
       _otherPlayerMove.add(MapEntry(xPos, yPos));
+    });
+
+    io.on('END_GAME', (data) {
+      _networkStatus.add("!");
     });
 
     io.connect();
