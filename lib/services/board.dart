@@ -45,11 +45,12 @@ class BoardService {
         return;
       }
 
-      String player = _player$.value;
+      var player = _player$.value;
       List<List<String>> currentBoard = _board$.value;
 
       currentBoard[i][j] = player;
       _board$.add(currentBoard);
+      _playMoveSound(player);
       switchPlayer(player);
 
       bool isWinner = _checkWinner(i, j);
@@ -70,23 +71,35 @@ class BoardService {
       }
 
       if (status == null) {
-        player$.add(null);
+        _player$.add(null);
         boardState$.add(MapEntry(BoardState.Init, status));
         return;
       }
 
-      player$.add(status);
+      if (status == "!") {
+        _player$.add(null);
+        _boardState$.add(MapEntry(BoardState.Done, "!"));
+        return;
+      }
+
+      _player$.add(status);
       var isFirst = onlineService.isFirst.value;
 
       if (isFirst) {
         boardState$.add(MapEntry(BoardState.Play, status));
       } else {
+        switchPlayer(status);
         boardState$.add(MapEntry(BoardState.Wait, status));
       }
     });
   }
 
   void newMove(int i, int j) {
+    if (_gameMode$.value == GameMode.Online &&
+        boardState$.value.key == BoardState.Wait) {
+      return;
+    }
+
     String player = _player$.value;
     List<List<String>> currentBoard = _board$.value;
 
@@ -97,6 +110,11 @@ class BoardService {
 
     bool isWinner = _checkWinner(i, j);
 
+    if (_gameMode$.value == GameMode.Online) {
+      _boardState$.add(MapEntry(BoardState.Wait, player));
+      onlineService.move(i, j);
+    }
+
     if (isWinner) {
       _updateScore(player);
       _boardState$.add(MapEntry(BoardState.Done, player));
@@ -105,10 +123,8 @@ class BoardService {
       _boardState$.add(MapEntry(BoardState.Done, null));
     } else if (_gameMode$.value == GameMode.Solo) {
       botMove();
-    } else if (_gameMode$.value == GameMode.Online) {
-      _boardState$.add(MapEntry(BoardState.Wait, player));
-      onlineService.move(i, j);
     }
+
   }
 
   botMove() {
@@ -227,6 +243,7 @@ class BoardService {
   }
 
   void disconnectOnlineGame() {
+    _score$.add(MapEntry(0, 0));
     onlineService.disconnect();
   }
 

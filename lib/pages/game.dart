@@ -44,6 +44,11 @@ class GamePageState extends State<GamePage> {
                   final int xScore = snapshot.data.key.key;
                   final int oScore = snapshot.data.key.value;
 
+                  if (snapshot.data.value.value == "!") {
+                    boardService.disconnectOnlineGame();
+                    Navigator.pop(context);
+                  }
+
                   if (snapshot.data.value.key == BoardState.Init) {
                     return Flex(
                       direction: Axis.horizontal,
