@@ -8,6 +8,7 @@ import 'package:tic_tac/components/x.dart';
 import 'package:tic_tac/services/board.dart';
 import 'package:tic_tac/services/provider.dart';
 import 'package:tic_tac/theme/theme.dart';
+import 'package:tuple/tuple.dart';
 
 class GamePage extends StatefulWidget {
   GamePageState createState() => GamePageState();
@@ -28,28 +29,39 @@ class GamePageState extends State<GamePage> {
           backgroundColor: Colors.white,
           body: SafeArea(
             child: StreamBuilder<
-                    MapEntry<MapEntry<int, int>, MapEntry<BoardState, String>>>(
-                stream: Observable.combineLatest2(
+                    Tuple4<MapEntry<int, int>, MapEntry<BoardState, String>,
+                        String, GameMode>>(
+                stream: Observable.combineLatest4(
                     boardService.score$,
                     boardService.boardState$,
-                    (score, state) => MapEntry(score, state)),
+                    boardService.player$,
+                    boardService.gameMode$,
+                    (score, state, player, mode) =>
+                        Tuple4(score, state, player, mode)),
                 builder: (context,
                     AsyncSnapshot<
-                            MapEntry<MapEntry<int, int>,
-                                MapEntry<BoardState, String>>>
+                            Tuple4<MapEntry<int, int>,
+                                MapEntry<BoardState, String>, String, GameMode>>
                         snapshot) {
                   if (!snapshot.hasData) {
                     return Container();
                   }
-                  final int xScore = snapshot.data.key.key;
-                  final int oScore = snapshot.data.key.value;
+                  final int xScore = snapshot.data.item1.key;
+                  final int oScore = snapshot.data.item1.value;
 
-                  if (snapshot.data.value.value == "!") {
+                  final signal = snapshot.data.item2.value;
+                  final state = snapshot.data.item2.key;
+                  final mode = snapshot.data.item4;
+
+                  if (signal == "!") {
                     boardService.disconnectOnlineGame();
                     Navigator.pop(context);
                   }
 
-                  if (snapshot.data.value.key == BoardState.Init) {
+                  final player = snapshot.data.item3;
+                  print("player: $player");
+
+                  if (state == BoardState.Init) {
                     return Flex(
                       direction: Axis.horizontal,
                       children: [
@@ -110,7 +122,12 @@ class GamePageState extends State<GamePage> {
                                             horizontal: 10),
                                         child: Text(
                                           "Player",
-                                          style: TextStyle(fontSize: 20),
+                                          style: player == "X"
+                                              ? TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.amber)
+                                              : TextStyle(fontSize: 20),
                                         ),
                                       )
                                     ],
@@ -120,7 +137,9 @@ class GamePageState extends State<GamePage> {
                                     child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[Board()],
+                                  children: <Widget>[
+                                    Board(),
+                                  ],
                                 )),
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 20),
@@ -137,7 +156,12 @@ class GamePageState extends State<GamePage> {
                                         ),
                                         child: Text(
                                           "Player",
-                                          style: TextStyle(fontSize: 20),
+                                          style: player == "O"
+                                              ? TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.amber)
+                                              : TextStyle(fontSize: 20),
                                         ),
                                       ),
                                       Expanded(
@@ -166,6 +190,14 @@ class GamePageState extends State<GamePage> {
                               ],
                             ),
                           ),
+                          (mode == GameMode.Online && state == BoardState.Play)
+                              ? Text(
+                                  "Your Turn",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.amber),
+                                )
+                              : Container(),
                           Container(
                             color: Colors.white,
                             height: 60,

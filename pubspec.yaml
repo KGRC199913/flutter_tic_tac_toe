@@ -17,6 +17,7 @@ dependencies:
   audioplayers: ^0.13.0
   sliding_up_panel: ^0.3.4
   socket_io_client: ^0.9.10
+  tuple: ^1.0.3
 
 dev_dependencies:
   flutter_test:

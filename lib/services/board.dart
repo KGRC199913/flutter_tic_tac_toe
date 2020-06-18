@@ -34,6 +34,8 @@ class BoardService {
 
   String _start;
 
+  String _assignedSign;
+
   BoardService() {
     _initStreams();
 
@@ -83,8 +85,9 @@ class BoardService {
       }
 
       _player$.add(status);
-      var isFirst = onlineService.isFirst.value;
+      _assignedSign = status;
 
+      var isFirst = onlineService.isFirst.value;
       if (isFirst) {
         boardState$.add(MapEntry(BoardState.Play, status));
       } else {
@@ -124,7 +127,6 @@ class BoardService {
     } else if (_gameMode$.value == GameMode.Solo) {
       botMove();
     }
-
   }
 
   botMove() {
@@ -219,16 +221,39 @@ class BoardService {
     return false;
   }
 
-  void resetBoard() {
+  void resetBoard({String winner = ""}) {
     _board$.add([
       [' ', ' ', ' '],
       [' ', ' ', ' '],
       [' ', ' ', ' ']
     ]);
     _player$.add(_start);
-    _boardState$.add(MapEntry(BoardState.Play, ""));
-    if (_player$.value == "O") {
-      _player$.add("X");
+
+    if (_gameMode$.value == GameMode.Online) {
+      if (winner == _assignedSign) {
+        _boardState$.add(MapEntry(BoardState.Wait, ""));
+
+        if (_assignedSign == "O") {
+          _player$.add("X");
+        } else {
+          _player$.add("O");
+        }
+      } else if (winner != _assignedSign && winner != null) {
+        _boardState$.add(MapEntry(BoardState.Play, ""));
+        _player$.add(_assignedSign);
+      } else {
+        if (_assignedSign != "X") {
+          _boardState$.add(MapEntry(BoardState.Wait, ""));
+        } else {
+          _boardState$.add(MapEntry(BoardState.Play, ""));
+        }
+        _player$.add("X");
+      }
+    } else {
+      _boardState$.add(MapEntry(BoardState.Play, ""));
+      if (_assignedSign == "O") {
+        _player$.add("X");
+      }
     }
   }
 
