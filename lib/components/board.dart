@@ -7,6 +7,7 @@ import 'package:tic_tac/services/alert.dart';
 import 'package:tic_tac/services/board.dart';
 import 'package:tic_tac/services/provider.dart';
 import 'package:tic_tac/theme/theme.dart';
+import 'package:tuple/tuple.dart';
 
 import 'o.dart';
 
@@ -23,26 +24,31 @@ class _BoardState extends State<Board> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<
-            MapEntry<List<List<String>>, MapEntry<BoardState, String>>>(
-        stream: Observable.combineLatest2(boardService.board$,
-            boardService.boardState$, (a, b) => MapEntry(a, b)),
+            Tuple3<List<List<String>>, MapEntry<BoardState, String>, GameMode>>(
+        stream: Observable.combineLatest3(
+            boardService.board$,
+            boardService.boardState$,
+            boardService.gameMode$,
+            (a, b, c) => Tuple3(a, b, c)),
         builder: (context,
             AsyncSnapshot<
-                    MapEntry<List<List<String>>, MapEntry<BoardState, String>>>
+                    Tuple3<List<List<String>>, MapEntry<BoardState, String>,
+                        GameMode>>
                 snapshot) {
           if (!snapshot.hasData) {
             return Container();
           }
 
-          final List<List<String>> board = snapshot.data.key;
-          final MapEntry<BoardState, String> state = snapshot.data.value;
+          final List<List<String>> board = snapshot.data.item1;
+          final MapEntry<BoardState, String> state = snapshot.data.item2;
+          final GameMode mode = snapshot.data.item3;
 
           if (state.key == BoardState.Done) {
-            boardService.resetBoard();
+            boardService.resetBoard(winner: state.value);
 
             String title = 'Winner';
 
-            if (state.value == null) {
+            if (state.value == null || state.value.isEmpty) {
               title = "Draw";
             }
 
