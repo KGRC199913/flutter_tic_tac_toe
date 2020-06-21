@@ -26,65 +26,67 @@ class SettingsPageState extends State<SettingsPage> {
 
           return Scaffold( backgroundColor: Colors.blueGrey[900],
             body: GestureDetector(
-              onHorizontalDragDown: (details) {
-                Navigator.pop(context);
-              },
+              // onHorizontalDragDown: (details) {
+              //   Navigator.pop(context);
+              // },
               onPanDown: (details) {
                 Navigator.pop(context);
               },
               // onHorizontalDragCancel: () {
               //   Navigator.pop(context);
               // },
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: Row(
+              child: Expanded(
+                              child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              // Text(
+                              //   "Settings".toUpperCase(),
+                              //   style: TextStyle(
+                              //     color: Colors.black,
+                              //     fontWeight: FontWeight.w700,
+                              //     fontSize: 30,
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ),
+                        Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            // Text(
-                            //   "Settings".toUpperCase(),
-                            //   style: TextStyle(
-                            //     color: Colors.black,
-                            //     fontWeight: FontWeight.w700,
-                            //     fontSize: 30,
-                            //   ),
-                            // ),
+                            Text(
+                              "Enable Sound",
+                              style: TextStyle(
+                                color: Colors.white,
+                                // fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
+                            ),
+                            Expanded(child: Container()),
+                            CupertinoSwitch(
+                              onChanged: (e) {
+                                soundService.enableSound$.add(e);
+                              },
+                              value: isSoundEnabled,
+                              activeColor: MyColors.orange,
+                            )
                           ],
                         ),
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            "Enable Sound",
-                            style: TextStyle(
-                              color: Colors.white,
-                              // fontWeight: FontWeight.w700,
-                              fontSize: 20,
-                            ),
-                          ),
-                          Expanded(child: Container()),
-                          CupertinoSwitch(
-                            onChanged: (e) {
-                              soundService.enableSound$.add(e);
-                            },
-                            value: isSoundEnabled,
-                            activeColor: MyColors.orange,
-                          )
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
