@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tic_tac/theme/theme.dart';
 
 class Logo extends StatelessWidget {
   @override
@@ -6,13 +7,13 @@ class Logo extends StatelessWidget {
     return Stack(
       children: <Widget>[
         Container(
-          height: 150,
-          width: 200,
+          height: 400,
+          width: 600,
           child: Stack(
             children: <Widget>[
               Positioned(
-                right: 10,
-                top: 70,
+                bottom: 0,
+                right: 0,
                 child: Container(
                   height: 65,
                   width: 65,
@@ -22,7 +23,8 @@ class Logo extends StatelessWidget {
                       radius: 0.18,
                       colors: [
                         Colors.transparent,
-                        Colors.white.withOpacity(.35)
+                        Colors.black87.withOpacity(.65)
+                        
                       ],
                       stops: [1, 1],
                     ),
@@ -31,13 +33,13 @@ class Logo extends StatelessWidget {
               ),
               Positioned(
                 left: 0,
-                bottom: 50,
+                top: 10,
                 child: RotationTransition(
                   turns: AlwaysStoppedAnimation(-50 / 360),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(200),
-                      color: Colors.white.withOpacity(1),
+                      color: Colors.black87.withOpacity(.67),
                     ),
                     height: 25,
                     width: 200,
@@ -45,14 +47,14 @@ class Logo extends StatelessWidget {
                 ),
               ),
               Positioned(
-                right: 50,
-                bottom: 30,
+                left: 50,
+                top: 30,
                 child: RotationTransition(
                   turns: AlwaysStoppedAnimation(40 / 360),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(200),
-                      color: Colors.white.withOpacity(1),
+                      color: Colors.black87.withOpacity(.71),
                     ),
                     height: 25,
                     width: 140,

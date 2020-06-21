@@ -27,8 +27,8 @@ class X extends StatelessWidget {
                     end: Alignment.centerRight,
                     stops: [0.1, 0.8],
                     colors: [
-                      MyTheme.red,
-                      MyTheme.orange,
+                      MyColors.darkIndigo,
+                      MyColors.deepPink,
                     ],
                   ),
                 ),
@@ -50,8 +50,8 @@ class X extends StatelessWidget {
                     end: Alignment.centerRight,
                     stops: [0.1, 0.8],
                     colors: [
-                      MyTheme.orange,
-                      MyTheme.red,
+                      MyColors.darkIndigo,
+                      MyColors.deepPink,
                     ],
                   ),
                 ),

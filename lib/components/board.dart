@@ -55,9 +55,9 @@ class _BoardState extends State<Board> {
             Widget body = state.value == 'X'
                 ? X(50, 20)
                 : (state.value == "O"
-                    ? O(50, MyTheme.green)
+                    ? O(50, MyColors.green)
                     : Row(
-                        children: <Widget>[X(50, 20), O(50, MyTheme.green)],
+                        children: <Widget>[X(50, 20), O(50, MyColors.green)],
                       ));
 
             WidgetsBinding.instance.addPostFrameCallback((_) => {
@@ -77,7 +77,7 @@ class _BoardState extends State<Board> {
           return Container(
             padding: EdgeInsets.all(30),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.blueGrey[800],
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
@@ -127,7 +127,7 @@ class _BoardState extends State<Board> {
 
   Widget _buildBox(int i, int j, item) {
     BoxBorder border = Border();
-    BorderSide borderStyle = BorderSide(width: 1, color: Colors.black26);
+    BorderSide borderStyle = BorderSide(width: 1, color: Colors.white);
     double height = 80;
     double width = 60;
     if (j == 1) {
@@ -146,14 +146,14 @@ class _BoardState extends State<Board> {
     }
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.blueGrey[800],
         border: border,
       ),
       height: height,
       width: width,
       child: Center(
         child:
-            item == ' ' ? null : item == 'X' ? X(50, 13) : O(50, MyTheme.green),
+            item == ' ' ? null : item == 'X' ? X(50, 13) : O(50, MyColors.green),
       ),
     );
   }
