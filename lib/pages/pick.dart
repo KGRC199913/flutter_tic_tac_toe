@@ -27,9 +27,9 @@ class _PickPageState extends State<PickPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
+    return Scaffold( backgroundColor: Colors.blueGrey[800],
+      body: SafeArea(
+        child: Container(
           width: MediaQuery.of(context).size.width,
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -38,7 +38,7 @@ class _PickPageState extends State<PickPage> {
               Text(
                 "Pic Your Side",
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontWeight: FontWeight.w700,
                   fontSize: 30,
                 ),
@@ -56,7 +56,7 @@ class _PickPageState extends State<PickPage> {
                       ),
                       Radio(
                         onChanged: (e) => setGroupvalue(e),
-                        activeColor: MyTheme.orange,
+                        activeColor: MyColors.orange,
                         value: 'X',
                         groupValue: groupValue,
                       ),
@@ -65,7 +65,7 @@ class _PickPageState extends State<PickPage> {
                         child: Text(
                           "First",
                           style: TextStyle(
-                              color: Colors.black87,
+                              color: Colors.white,
                               fontWeight: FontWeight.w700,
                               fontSize: 16),
                         ),
@@ -76,11 +76,11 @@ class _PickPageState extends State<PickPage> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () => setGroupvalue("O"),
-                        child: O(100, MyTheme.green),
+                        child: O(100, MyColors.green),
                       ),
                       Radio(
                         onChanged: (e) => setGroupvalue(e),
-                        activeColor: MyTheme.orange,
+                        activeColor: MyColors.orange,
                         value: 'O',
                         groupValue: groupValue,
                       ),
@@ -89,7 +89,7 @@ class _PickPageState extends State<PickPage> {
                         child: Text(
                           "Second",
                           style: TextStyle(
-                              color: Colors.black87,
+                              color: Colors.white,
                               fontWeight: FontWeight.w700,
                               fontSize: 16),
                         ),
@@ -118,7 +118,7 @@ class _PickPageState extends State<PickPage> {
                 height: 40,
                 width: 250,
                 borderRadius: 200,
-                gradient: [MyTheme.orange, MyTheme.red],
+                gradient: [MyColors.orange, MyColors.red],
                 child: Text(
                   "continue".toUpperCase(),
                   style: TextStyle(

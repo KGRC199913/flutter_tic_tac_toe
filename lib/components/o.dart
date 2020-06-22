@@ -15,7 +15,7 @@ class O extends StatelessWidget {
         borderRadius: BorderRadius.circular(size / 2),
         gradient: RadialGradient(
           radius: 0.18,
-          colors: [Colors.transparent, color],
+          colors: [Colors.transparent, Colors.green],
           stops: [1, 1],
         ),
       ),
